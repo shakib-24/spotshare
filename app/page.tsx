@@ -2,10 +2,9 @@
 // Next.js 14 App Router — Server Component
 // Fetches all spots from Supabase and renders a responsive card grid.
  
-import { createClient } from "@/lib/supabase";
-import Image from "next/image";
+import { createServerSupabaseClient } from "@/lib/supabase";
 import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
+import Image from "next/image";
  
 // ────────────────────────────────────────────────────────────
 // Type
@@ -152,16 +151,15 @@ function EmptyState() {
 // Page (Server Component)
 // ────────────────────────────────────────────────────────────
 export default async function HomePage() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  const supabase = await createServerSupabaseClient();
   
   const { data: { session } } = await supabase.auth.getSession();
   
   if (!session) {
     redirect('/login');
   }
+
+  const spots = await getSpots();
 
   const spots = await getSpots();
  
