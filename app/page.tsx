@@ -21,10 +21,11 @@ type Spot = {
 // Data fetching (server-side, no cache = always fresh)
 // ────────────────────────────────────────────────────────────
 async function getSpots(): Promise<Spot[]> {
+  const { createClient } = await import('@supabase/supabase-js');
   const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
  
   const { data, error } = await supabase
     .from("spots")
@@ -159,7 +160,7 @@ export default async function HomePage() {
     redirect('/login');
   }
 
-  const spots = await getSpots();
+
 
   const spots = await getSpots();
  
