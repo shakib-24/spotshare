@@ -170,8 +170,10 @@ export default function LoginPage() {
       }
 
       // 成功 → トップページへ
-      router.push("/");
-      router.refresh(); // Server Component のキャッシュをクリア
+router.refresh();
+setTimeout(() => {
+  router.push("/");
+}, 500);// Server Component のキャッシュをクリア
     });
   };
 
