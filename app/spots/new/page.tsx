@@ -1,10 +1,10 @@
 // app/page.tsx
 // Next.js 14 App Router — Server Component
 // Fetches all spots from Supabase and renders a responsive card grid.
- 
+
 import { createClient } from "@/lib/supabase";
 import Image from "next/image";
- 
+
 // ────────────────────────────────────────────────────────────
 // Type
 // ────────────────────────────────────────────────────────────
@@ -15,7 +15,7 @@ type Spot = {
   image_url: string | null;
   created_at: string;
 };
- 
+
 // ────────────────────────────────────────────────────────────
 // Data fetching (server-side, no cache = always fresh)
 // ────────────────────────────────────────────────────────────
@@ -24,31 +24,31 @@ async function getSpots(): Promise<Spot[]> {
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
- 
+
   const { data, error } = await supabase
     .from("spots")
     .select("id, title, description, image_url, created_at")
     .order("created_at", { ascending: false });
- 
+
   if (error) {
     console.error("[Supabase] spots fetch error:", error.message);
     return [];
   }
- 
+
   return data ?? [];
 }
- 
+
 // ────────────────────────────────────────────────────────────
 // Sub-components
 // ────────────────────────────────────────────────────────────
- 
+
 function SpotCard({ spot }: { spot: Spot }) {
   const formattedDate = new Intl.DateTimeFormat("ja-JP", {
     year: "numeric",
     month: "short",
     day: "numeric",
   }).format(new Date(spot.created_at));
- 
+
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200/60 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:ring-amber-400/50">
       {/* Thumbnail */}
@@ -79,23 +79,23 @@ function SpotCard({ spot }: { spot: Spot }) {
             </svg>
           </div>
         )}
- 
+
         {/* Amber accent bar — the card's signature element */}
         <span className="absolute bottom-0 left-0 h-[3px] w-0 bg-amber-400 transition-all duration-300 group-hover:w-full" />
       </div>
- 
+
       {/* Body */}
       <div className="flex flex-1 flex-col gap-2 p-5">
         <h2 className="line-clamp-2 font-playfair text-xl font-semibold leading-snug text-slate-900 group-hover:text-amber-600 transition-colors duration-200">
           {spot.title}
         </h2>
- 
+
         {spot.description && (
           <p className="line-clamp-3 flex-1 text-sm leading-relaxed text-slate-500">
             {spot.description}
           </p>
         )}
- 
+
         {/* Footer */}
         <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3">
           <time
@@ -112,7 +112,7 @@ function SpotCard({ spot }: { spot: Spot }) {
     </article>
   );
 }
- 
+
 function EmptyState() {
   return (
     <div className="col-span-full flex flex-col items-center gap-4 py-24 text-center">
@@ -145,30 +145,30 @@ function EmptyState() {
     </div>
   );
 }
- 
+
 // ────────────────────────────────────────────────────────────
 // Page (Server Component)
 // ────────────────────────────────────────────────────────────
 export default async function HomePage() {
   const spots = await getSpots();
- 
+
   return (
     <>
       {/*
         Google Fonts — Playfair Display for display headings.
         Add this to app/layout.tsx <head> if not already present:
- 
+
         import { Inter, Playfair_Display } from "next/font/google"
         const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
         const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" })
- 
+
         Then in tailwind.config.ts extend fontFamily:
           fontFamily: {
             inter: ["var(--font-inter)", "sans-serif"],
             playfair: ["var(--font-playfair)", "serif"],
           },
       */}
- 
+
       <div className="min-h-screen bg-slate-50">
         {/* ── Hero / Header ─────────────────────────────── */}
         <header className="relative overflow-hidden bg-slate-900 px-6 py-20 text-center sm:py-28">
@@ -179,23 +179,23 @@ export default async function HomePage() {
           >
             <div className="h-96 w-96 rounded-full bg-amber-400/10 blur-3xl" />
           </div>
- 
+
           <p className="relative mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">
             Discover
           </p>
- 
+
           <h1 className="relative font-playfair text-4xl font-bold leading-tight text-white sm:text-5xl lg:text-6xl">
             あなたの旅を彩る
             <br />
             <span className="text-amber-400">スポット</span>を見つけよう
           </h1>
- 
+
           <p className="relative mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-400">
             全国のおすすめスポットを厳選してご紹介。
             <br className="hidden sm:block" />
             次の目的地へのインスピレーションを見つけてください。
           </p>
- 
+
           {/* Count badge */}
           {spots.length > 0 && (
             <div className="relative mt-8 inline-flex items-center gap-2 rounded-full border border-slate-700 bg-slate-800/60 px-5 py-2 text-sm text-slate-300 backdrop-blur">
@@ -204,7 +204,7 @@ export default async function HomePage() {
             </div>
           )}
         </header>
- 
+
         {/* ── Main content ──────────────────────────────── */}
         <main className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
           {/* Section label */}
@@ -215,7 +215,7 @@ export default async function HomePage() {
             </span>
             <span className="h-px flex-1 bg-slate-200" />
           </div>
- 
+
           {/* Card grid */}
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {spots.length === 0 ? (
@@ -225,7 +225,7 @@ export default async function HomePage() {
             )}
           </div>
         </main>
- 
+
         {/* ── Footer ────────────────────────────────────── */}
         <footer className="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-400">
           © {new Date().getFullYear()} Spots App. All rights reserved.
@@ -234,4 +234,3 @@ export default async function HomePage() {
     </>
   );
 }
- 
