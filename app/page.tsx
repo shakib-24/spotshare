@@ -4,6 +4,8 @@
  
 import { createClient } from "@/lib/supabase";
 import Image from "next/image";
+import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
  
 // ────────────────────────────────────────────────────────────
 // Type
@@ -150,6 +152,17 @@ function EmptyState() {
 // Page (Server Component)
 // ────────────────────────────────────────────────────────────
 export default async function HomePage() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+  
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (!session) {
+    redirect('/login');
+  }
+
   const spots = await getSpots();
  
   return (
