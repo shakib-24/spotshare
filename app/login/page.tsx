@@ -197,8 +197,8 @@ window.location.href = "/";
   const handleSubmit = activeTab === "signin" ? handleSignIn : handleSignUp;
 
   // ── Google OAuth ──────────────────────────────────────────
-  const handleGoogleSignIn = () => {
-    supabase.auth.signInWithOAuth({
+  const handleGoogleSignIn = async () => {
+    await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
