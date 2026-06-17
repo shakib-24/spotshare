@@ -5,6 +5,7 @@
 import { createServerSupabaseClient } from "@/lib/supabase";
 import { redirect } from 'next/navigation';
 import Image from "next/image";
+import LogoutButton from "@/app/components/LogoutButton";
  
 // ────────────────────────────────────────────────────────────
 // Type
@@ -184,6 +185,7 @@ if (!session) {
       <div className="min-h-screen bg-slate-50">
         {/* ── Hero / Header ─────────────────────────────── */}
         <header className="relative overflow-hidden bg-slate-900 px-6 py-20 text-center sm:py-28">
+          <LogoutButton />
           {/* Decorative amber glow */}
           <div
             aria-hidden
